@@ -37,6 +37,44 @@ body { font-family: 'DM Sans', sans-serif; }
   from { opacity:0; transform:translateY(40px); }
   to   { opacity:1; transform:translateY(0); }
 }
+@keyframes nm-shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+@keyframes nm-card-in {
+  from { opacity:0; transform:translateY(18px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes nm-card-luxury {
+  0%   { opacity:0; transform:translateY(44px) scale(.96); filter:blur(4px); }
+  100% { opacity:1; transform:translateY(0)    scale(1);   filter:blur(0);   }
+}
+@keyframes nm-price-flash {
+  0%   { color:var(--navy); }
+  35%  { color:var(--gold); text-shadow:0 0 18px rgba(201,168,76,.55); }
+  100% { color:var(--navy); text-shadow:none; }
+}
+@keyframes nm-hdr-drop {
+  from { opacity:0; transform:translateY(-20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes nm-ripple {
+  0%   { transform:scale(0); opacity:.5; }
+  100% { transform:scale(4); opacity:0; }
+}
+@keyframes nm-overlay-glow {
+  0%,100% { box-shadow: inset 0 0 60px rgba(201,168,76,.04); }
+  50%      { box-shadow: inset 0 0 120px rgba(201,168,76,.09); }
+}
+@keyframes nm-bar-sweep {
+  0%   { transform: translateX(-100%); }
+  60%  { transform: translateX(20%); }
+  100% { transform: translateX(120%); }
+}
+@keyframes nm-plane-pulse {
+  0%,100% { transform:translateY(0) rotate(-5deg); opacity:.7; }
+  50%      { transform:translateY(-6px) rotate(5deg); opacity:1; }
+}
 @keyframes nm-fade-in {
   from { opacity:0; transform:translateY(10px); }
   to   { opacity:1; transform:translateY(0); }
@@ -110,7 +148,8 @@ body { animation: nm-page-in .5s ease both; }
 
 /* Eyebrow label */
 .nm-hero-eyebrow {
-  display: inline-flex;
+  display: flex;
+  justify-content: center;
   align-items: center;
   gap: 10px;
   font-family: 'DM Sans', sans-serif;
@@ -120,6 +159,7 @@ body { animation: nm-page-in .5s ease both; }
   text-transform: uppercase;
   color: var(--gold);
   margin-bottom: 18px;
+  white-space: nowrap;
 }
 .nm-hero-eyebrow::before,
 .nm-hero-eyebrow::after {
@@ -128,6 +168,10 @@ body { animation: nm-page-in .5s ease both; }
   height: 1px;
   background: var(--gold);
   opacity: .5;
+}
+@media (max-width: 400px) {
+  .nm-hero-eyebrow { letter-spacing: 2px; gap: 6px; }
+  .nm-hero-eyebrow::before, .nm-hero-eyebrow::after { flex: 0 0 16px; }
 }
 
 /* Main headline */
@@ -154,6 +198,17 @@ body { animation: nm-page-in .5s ease both; }
   letter-spacing: .3px;
   margin: 0;
 }
+#nm-type-word { display: inline-block; }
+#nm-cursor {
+  display: inline-block;
+  color: var(--gold, #c9a84c);
+  font-weight: 300;
+  margin-left: 1px;
+  animation: nm-cursor-blink .7s step-end infinite;
+}
+@keyframes nm-cursor-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.nm-aiop { display: inline; }
+.nm-aiop br { display: block; }
 
 /* Search box container */
 .nm-search-wrap {
@@ -175,7 +230,7 @@ body { animation: nm-page-in .5s ease both; }
 /* ── Tabs ─────────────────────────────────────────── */
 .nm-gf-tabs {
   display: flex;
-  border-bottom: 1.5px solid var(--border);
+  border-bottom: none;
   overflow-x: auto;
   scrollbar-width: none;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
@@ -331,6 +386,13 @@ body { animation: nm-page-in .5s ease both; }
 }
 .nm-gf-btn:hover::before { opacity: 1; }
 .nm-gf-btn:active { transform: translateY(0); }
+.nm-gf-btn.nm-btn-loading {
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-lt) 25%, #f5e09a 50%, var(--gold-lt) 75%, var(--gold) 100%);
+  background-size: 200% auto;
+  animation: nm-shimmer 1.4s linear infinite;
+  pointer-events: none;
+  opacity: .9;
+}
 
 /* ── Autocomplete dropdown ─────────────────────────── */
 .nm-ac-wrap { position: relative; }
@@ -389,18 +451,26 @@ body { animation: nm-page-in .5s ease both; }
 /* ══════════════════════════════════════════════════════
    RESULTS AREA
 ══════════════════════════════════════════════════════ */
-#nm-results { background: #f1f4f9; min-height: 220px; }
+#nm-results { background: #f1f4f9; min-height: 220px; overflow-x: hidden; }
 #nm-results-inner {
   opacity: 0; transform: translateY(24px);
   transition: opacity .45s ease, transform .45s ease;
+  max-width: 100%; overflow-x: hidden;
 }
 #nm-results-inner.nm-visible { opacity: 1; transform: translateY(0); }
 
-/* Gold loading bar */
-.nm-loading { text-align: center; padding: 70px 20px; }
+/* Premium loading */
+.nm-loading {
+  text-align: center;
+  padding: 72px 32px 80px;
+  background: linear-gradient(160deg, #08101e 0%, #0f1e35 100%);
+  border-radius: 20px;
+  margin: 8px 0;
+  animation: nm-overlay-glow 3s ease-in-out infinite;
+}
 .nm-spinner {
   width: 48px; height: 48px;
-  border: 3px solid #e2e8f4;
+  border: 3px solid rgba(201,168,76,.2);
   border-top-color: var(--gold);
   border-radius: 50%;
   animation: nm-spin .75s linear infinite;
@@ -408,15 +478,61 @@ body { animation: nm-page-in .5s ease both; }
 }
 .nm-loading p {
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px; font-weight: 500;
-  color: #667;
-  letter-spacing: .2px;
+  font-size: 15px; font-weight: 500;
+  color: rgba(255,255,255,.55);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+.nm-loading-plane {
+  font-size: 52px; color: var(--gold);
+  animation: nm-plane-pulse 1.8s cubic-bezier(.45,0,.55,1) infinite;
+  display: block; margin: 0 auto 10px;
+  filter: drop-shadow(0 0 18px rgba(201,168,76,.45));
+}
+.nm-loading-route {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 22px; font-weight: 800;
+  color: #fff; letter-spacing: 3px;
+  margin: 0 auto 28px;
+}
+.nm-loading-route span { color: var(--gold); }
+.nm-loading-bar-wrap {
+  position: relative; width: 260px; height: 2px;
+  background: rgba(201,168,76,.12); border-radius: 99px;
+  margin: 0 auto 28px; overflow: hidden;
+}
+.nm-loading-bar {
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, var(--gold) 50%, rgba(245,224,154,.8) 65%, transparent 100%);
+  animation: nm-bar-sweep 1.8s cubic-bezier(.4,0,.2,1) infinite;
+}
+/* Cards */
+.nm-fc {
+  transition: transform .22s cubic-bezier(.16,1,.3,1),
+              box-shadow .22s cubic-bezier(.16,1,.3,1),
+              border-color .22s ease;
+}
+.nm-fc:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 52px rgba(0,0,0,.16), 0 0 0 1px rgba(201,168,76,.18);
+  border-color: rgba(201,168,76,.35);
+}
+/* Search button ripple */
+.nm-gf-btn .nm-ripple {
+  position: absolute; border-radius: 50%;
+  background: rgba(255,255,255,.35);
+  width: 60px; height: 60px;
+  margin-top: -30px; margin-left: -30px;
+  animation: nm-ripple .6s ease-out forwards;
+  pointer-events: none;
 }
 
 /* Results header */
 .nm-results-hdr {
   display: flex; justify-content: space-between; align-items: center;
   margin-bottom: 22px; flex-wrap: wrap; gap: 12px;
+  animation: nm-hdr-drop .5s cubic-bezier(.16,1,.3,1) both;
 }
 .nm-results-title {
   font-family: 'Cormorant Garamond', serif;
@@ -501,7 +617,9 @@ body { animation: nm-page-in .5s ease both; }
   transition: transform .18s;
 }
 .nm-hc:hover, .nm-ec:hover { transform: translateY(-3px); }
-.nm-hc-img, .nm-ec-img { width: 100%; height: 160px; object-fit: cover; display: block; }
+.nm-hc-img-wrap { overflow: hidden; }
+.nm-hc-img, .nm-ec-img { width: 100%; height: 185px; object-fit: cover; display: block; transition: transform .4s ease; }
+.nm-hc:hover .nm-hc-img { transform: scale(1.04); }
 .nm-hc-ph, .nm-ec-ph {
   width: 100%; height: 160px;
   background: linear-gradient(135deg, var(--navy), var(--navy3));
@@ -521,10 +639,10 @@ body { animation: nm-page-in .5s ease both; }
 }
 .nm-ec-cat { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); margin-bottom: 4px; }
 .nm-hc-btn, .nm-ec-btn {
-  display: block; margin-top: 12px;
+  display: block; margin-top: 12px; width: 100%; cursor: pointer;
   background: var(--navy); color: var(--gold);
   border: 2px solid var(--gold); border-radius: 9px;
-  padding: 9px 0; text-align: center;
+  padding: 10px 18px; text-align: center;
   font-family: 'DM Sans', sans-serif;
   font-size: 13px; font-weight: 700;
   text-decoration: none; transition: all .2s;
@@ -588,22 +706,40 @@ body { animation: nm-page-in .5s ease both; }
 .nm-pay-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(201,168,76,.4); }
 .nm-pay-btn:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
 
-/* ── We Fly With ───────────────────────────────── */
-.airline-logos {
-  display: flex; flex-wrap: nowrap;
-  align-items: center;
-  gap: 24px; padding: 4px 12px;
-  overflow-x: auto; -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+/* ── Our Airline Partners ───────────────────────── */
+.nm-ap-section {
+  background: #0b1525;
+  border-top: 1px solid rgba(201,168,76,.25);
+  border-bottom: 1px solid rgba(201,168,76,.25);
+  padding: 56px 0;
 }
-.airline-logos::-webkit-scrollbar { display: none; }
-.airline-logos img {
-  height: 32px; width: auto; max-width: 110px; flex-shrink: 0;
+.nm-ap-eyebrow {
+  display: flex; align-items: center; justify-content: center;
+  gap: 18px; margin-bottom: 40px;
+}
+.nm-ap-line { flex: 1; max-width: 80px; height: 1px; background: var(--gold,#c9a84c); opacity: .5; }
+.nm-ap-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 4px;
+  color: var(--gold,#c9a84c);
+}
+.nm-ap-logos {
+  display: flex; flex-wrap: wrap;
+  justify-content: center; align-items: center;
+  gap: 36px 0;
+}
+.nm-ap-logos img {
+  flex: 0 0 25%; height: 36px; width: auto; max-width: 130px;
   object-fit: contain;
-  filter: grayscale(20%); opacity: .85;
-  transition: opacity .2s, filter .2s; display: block;
+  filter: brightness(0) invert(1); opacity: .55;
+  transition: opacity .25s;
 }
-.airline-logos img:hover { opacity: 1; filter: none; }
+.nm-ap-logos img:hover { opacity: 1; }
+@media (max-width: 767px) {
+  .nm-ap-logos { gap: 30px 0; }
+  .nm-ap-logos img { flex: 0 0 33.333%; height: 28px; }
+}
 
 /* ══════════════════════════════════════════════════════
    RESPONSIVE
@@ -618,15 +754,33 @@ body { animation: nm-page-in .5s ease both; }
   .nm-fc-mid { flex:1; padding:0 4px; }
   .nm-drawer { max-width: 100%; }
   .nm-gf-panel { padding: 18px; }
-  .nm-results-hdr { flex-direction: column; align-items: flex-start; }
+  .nm-results-hdr { flex-direction: column; align-items: flex-start; gap: 6px; margin-bottom: 14px; }
   .nm-trip-type { flex-wrap: wrap; }
+  /* Sort bar: single scrollable row, contained within viewport */
+  .nm-sort-bar { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; max-width: calc(100vw - 48px); padding-bottom: 2px; gap: 6px; }
+  .nm-sort-bar::-webkit-scrollbar { display: none; }
+  .nm-sort-bar > span { display: none; }
+  .nm-sort-btn { flex-shrink: 0; white-space: nowrap; padding: 6px 14px; }
 }
 @media (max-width: 480px) {
   .nm-gf-box { border-radius: 16px; }
   .nm-fc-price { font-size:14px; }
 }
+@media (max-width: 600px) {
+  .nm-tab-cars { display: none !important; }
+  .nm-gf-tabs { display: flex; }
+  .nm-gf-tab {
+    flex: 1;
+    padding: 14px 4px;
+    font-size: 11px;
+    gap: 4px;
+    justify-content: center;
+    flex-direction: row;
+  }
+  .nm-gf-tab i { font-size: 11px; }
+}
 /* ── Adults Stepper ── */
-.nm-stepper{display:flex;align-items:center;gap:4px;}
+.nm-stepper{display:flex;align-items:center;justify-content:center;gap:4px;width:100%;}
 .nm-step-btn{width:30px;height:30px;border:1.5px solid #c9a84c;background:#fff;color:#c9a84c;font-size:18px;line-height:1;cursor:pointer;border-radius:6px;flex-shrink:0;padding:0;}
 .nm-step-btn:hover{background:#c9a84c;color:#fff;}
 .nm-stepper input[type=number]{width:38px;text-align:center;border:1.5px solid #dce0ea;border-radius:6px;height:30px;font-size:15px;font-weight:700;-moz-appearance:textfield;background:#fff;}
@@ -645,9 +799,9 @@ body { animation: nm-page-in .5s ease both; }
     <div class="text-center mb-5">
       <div class="nm-hero-eyebrow">Premium Travel</div>
       <h1 class="nm-hero-headline">
-        Your Journey.<br><em>Your Way.</em>
+        <span id="nm-type-word">Your Journey.</span><br><em>Your Way.</em>
       </h1>
-      <p class="nm-hero-sub">Flights · Hotels · Sports · Concerts — all in one place</p>
+      <p class="nm-hero-sub">Flights · Hotels · Sports · Concerts<span class="nm-aiop"><br>All In One Place</span></p>
     </div>
 
     <div class="row justify-content-center">
@@ -669,7 +823,7 @@ body { animation: nm-page-in .5s ease both; }
             <button class="nm-gf-tab" data-tab="concerts" onclick="nmTab('concerts')">
               <i class="fas fa-music"></i> Concerts
             </button>
-            <button class="nm-gf-tab" data-tab="cars" onclick="nmTab('cars')">
+            <button class="nm-gf-tab nm-tab-cars" data-tab="cars" onclick="nmTab('cars')">
               <i class="fas fa-car"></i> Cars
             </button>
           </div>
@@ -680,7 +834,6 @@ body { animation: nm-page-in .5s ease both; }
               <small style="font-size:9px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;flex-shrink:0;">We Fly With:</small>
               <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/AA.svg" alt="American Airlines" title="American Airlines" style="height:32px;max-width:90px;object-fit:contain;opacity:.8;flex-shrink:0;">
               <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/F9.svg" alt="Frontier" title="Frontier" style="height:32px;max-width:90px;object-fit:contain;opacity:.8;flex-shrink:0;">
-              <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/NK.svg" alt="Spirit" title="Spirit" style="height:32px;max-width:90px;object-fit:contain;opacity:.8;flex-shrink:0;">
               <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/B6.svg" alt="JetBlue" title="JetBlue" style="height:32px;max-width:90px;object-fit:contain;opacity:.8;flex-shrink:0;">
               <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/AS.svg" alt="Alaska" title="Alaska Airlines" style="height:32px;max-width:90px;object-fit:contain;opacity:.8;flex-shrink:0;">
               <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/UA.svg" alt="United" title="United Airlines" style="height:32px;max-width:90px;object-fit:contain;opacity:.4;filter:grayscale(1);flex-shrink:0;">
@@ -719,8 +872,8 @@ body { animation: nm-page-in .5s ease both; }
                   <input type="date" id="nm-return" min="{{ date('Y-m-d') }}">
                 </div>
               </div>
-              <div class="col-4 col-md-2">
-                <div class="nm-gf-field">
+              <div class="col-6 col-md-2">
+                <div class="nm-gf-field" style="align-items:center;text-align:center;">
                   <label>Adults</label>
                   <div class="nm-stepper">
                     <button type="button" class="nm-step-btn" onclick="nmStep('nm-adults',-1)">&#8722;</button>
@@ -729,7 +882,7 @@ body { animation: nm-page-in .5s ease both; }
                   </div>
                 </div>
               </div>
-              <div class="col-8 col-md-2">
+              <div class="col-6 col-md-2">
                 <div class="nm-gf-field">
                   <label>Cabin Class</label>
                   <select id="nm-cabin">
@@ -750,47 +903,54 @@ body { animation: nm-page-in .5s ease both; }
 
           {{-- ── HOTELS ── --}}
           <div id="panel-hotels" class="nm-gf-panel d-none">
-            <div class="row g-2 align-items-stretch">
-              <div class="col-12 col-md-4">
+            <form method="POST" action="{{ route('hotels.search') }}" onsubmit="event.preventDefault(); nmSearchHotels(); return false;">
+            @csrf
+            <div class="row g-2">
+              {{-- Row 1: Destination full width --}}
+              <div class="col-12">
                 <div class="nm-gf-field">
                   <label><i class="fas fa-map-marker-alt"></i>Destination</label>
-                  <input type="text" id="nm-h-dest" list="nm-city-list" autocomplete="off" placeholder="City, resort, hotel…">
+                  <input type="text" name="city" id="nm-h-dest" autocomplete="off" placeholder="City, resort, hotel…">
                 </div>
               </div>
-              <div class="col-6 col-md-2">
+              {{-- Row 2: Check-in | Check-out --}}
+              <div class="col-6">
                 <div class="nm-gf-field">
                   <label><i class="fas fa-calendar"></i>Check-in</label>
-                  <input type="date" id="nm-h-in" min="{{ date('Y-m-d') }}">
+                  <input type="date" name="check_in" id="nm-h-in" min="{{ date('Y-m-d') }}">
                 </div>
               </div>
-              <div class="col-6 col-md-2">
+              <div class="col-6">
                 <div class="nm-gf-field">
                   <label><i class="fas fa-calendar-check"></i>Check-out</label>
-                  <input type="date" id="nm-h-out" min="{{ date('Y-m-d') }}">
+                  <input type="date" name="check_out" id="nm-h-out" min="{{ date('Y-m-d') }}">
                 </div>
               </div>
-              <div class="col-6 col-md-1">
+              {{-- Row 3: Adults | Rooms --}}
+              <div class="col-6">
                 <div class="nm-gf-field">
-                  <label>Adults</label>
-                  <select id="nm-h-adults">
+                  <label><i class="fas fa-user"></i>Adults</label>
+                  <select name="adults" id="nm-h-adults">
                     @for($i=1;$i<=9;$i++)<option value="{{ $i }}" @if($i==2) selected @endif>{{ $i }}</option>@endfor
                   </select>
                 </div>
               </div>
-              <div class="col-6 col-md-1">
+              <div class="col-6">
                 <div class="nm-gf-field">
-                  <label>Rooms</label>
-                  <select id="nm-h-rooms">
+                  <label><i class="fas fa-door-open"></i>Rooms</label>
+                  <select name="rooms" id="nm-h-rooms">
                     @for($i=1;$i<=5;$i++)<option value="{{ $i }}">{{ $i }}</option>@endfor
                   </select>
                 </div>
               </div>
-              <div class="col-12 col-md-auto d-flex align-items-stretch" style="min-width:150px">
-                <button type="button" class="nm-gf-btn" onclick="nmSearchHotels()">
+              {{-- Row 4: Search button full width --}}
+              <div class="col-12 d-flex align-items-stretch">
+                <button type="button" class="nm-gf-btn" id="nm-h-search-btn" onclick="nmSearchHotels()">
                   <i class="fas fa-search"></i> Search Hotels
                 </button>
               </div>
             </div>
+            </form>
           </div>
 
           {{-- ── SPORTS ── --}}
@@ -882,19 +1042,22 @@ body { animation: nm-page-in .5s ease both; }
 </div>
 
 {{-- ═══════════════════════════════════════════════════
-     WE FLY WITH SECTION
+     OUR AIRLINE PARTNERS SECTION
 ═══════════════════════════════════════════════════ --}}
-<section style="background:#fff; border-top:1px solid #edf0f7; border-bottom:1px solid #edf0f7; padding:28px 0;">
+<section class="nm-ap-section">
   <div class="container">
-    <p style="text-align:center; font-family:'DM Sans',sans-serif; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:3px; color:#bbb; margin-bottom:22px;">We Fly With</p>
-    <div class="airline-logos">
-      <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/AA.svg" alt="American Airlines" title="American Airlines">
-      <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/F9.svg" alt="Frontier Airlines" title="Frontier Airlines">
-      <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/NK.svg" alt="Spirit Airlines" title="Spirit Airlines">
-      <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/B6.svg" alt="JetBlue" title="JetBlue">
-      <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/AS.svg" alt="Alaska Airlines" title="Alaska Airlines">
-      <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/UA.svg" alt="United Airlines" title="United Airlines (Coming Soon)" style="opacity:0.3; filter:grayscale(1);">
-      <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/DL.svg" alt="Delta Air Lines" title="Delta Air Lines (Coming Soon)" style="opacity:0.3; filter:grayscale(1);">
+    <div class="nm-ap-eyebrow">
+      <span class="nm-ap-line"></span>
+      <span class="nm-ap-label">Our Airline Partners</span>
+      <span class="nm-ap-line"></span>
+    </div>
+    <div class="nm-ap-logos">
+      <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/AA.svg" alt="American Airlines">
+      <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/F9.svg" alt="Frontier Airlines">
+      <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/B6.svg" alt="JetBlue">
+      <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/AS.svg" alt="Alaska Airlines">
+      <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/UA.svg" alt="United Airlines">
+      <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/DL.svg" alt="Delta Air Lines">
     </div>
   </div>
 </section>
@@ -931,14 +1094,28 @@ body { animation: nm-page-in .5s ease both; }
       <div class="row g-2">
         <div class="col-6"><div class="nm-df"><label>First Name *</label><input type="text" id="bk-fn" placeholder="John" required></div></div>
         <div class="col-6"><div class="nm-df"><label>Last Name *</label><input type="text" id="bk-ln" placeholder="Smith" required></div></div>
+        <div class="col-6"><div class="nm-df"><label>Date of Birth *</label><input type="date" id="bk-dob" required></div></div>
+        <div class="col-6"><div class="nm-df"><label>Gender *</label>
+          <select id="bk-gender" required style="width:100%;padding:10px 12px;border:1.5px solid #dce0ea;border-radius:10px;font-size:14px;background:#fff;color:#0a1628;">
+            <option value="">Select</option>
+            <option value="m">Male</option>
+            <option value="f">Female</option>
+          </select>
+        </div></div>
       </div>
       <div class="nm-df"><label>Email *</label><input type="email" id="bk-em" placeholder="john@example.com" required></div>
-      <div class="nm-df"><label>Phone</label><input type="tel" id="bk-ph" placeholder="+1 (555) 000-0000"></div>
+      <div class="nm-df"><label>Phone *</label><input type="tel" id="bk-ph" placeholder="+1 (555) 000-0000" required></div>
       <p style="font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin:20px 0 14px;">Payment</p>
       <div class="nm-df">
         <label>Card Details *</label>
         <div id="nm-card-el"></div>
         <div id="nm-card-err"></div>
+      </div>
+      <div style="background:#f8f9fc;border:1px solid #edf0f7;border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin:0;">
+          <input type="checkbox" id="bk-disclaimer" required style="margin-top:3px;flex-shrink:0;accent-color:#c9a84c;">
+          <span style="font-size:12px;color:#666;line-height:1.5;">I agree that ticket prices are subject to availability and airline fare rules. Cancellation and change policies vary by carrier. Nomaly Travel acts as an agent — the contract of carriage is between the passenger and the airline. By completing this booking I accept these terms.</span>
+        </label>
       </div>
       <div id="nm-book-msg"></div>
       <button type="submit" class="nm-pay-btn" id="nm-pay-btn">
@@ -953,51 +1130,6 @@ body { animation: nm-page-in .5s ease both; }
 
 </div>
 
-{{-- ═══════════════════════════════════════════════════
-     BOOKING DRAWER
-═══════════════════════════════════════════════════ --}}
-<div id="nm-overlay" class="nm-overlay" onclick="nmCloseDrawer()"></div>
-<div id="nm-drawer" class="nm-drawer">
-  <div class="nm-drw-hdr">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <h5>Complete Booking</h5>
-      <button class="nm-drw-close" onclick="nmCloseDrawer()">&times;</button>
-    </div>
-    <div id="nm-drw-sub" style="font-size:13px;opacity:.75;margin-top:6px;"></div>
-  </div>
-  <div class="nm-drw-body">
-    <div id="nm-drw-summary" class="nm-drw-summary"></div>
-
-    <form id="nm-book-form" onsubmit="nmSubmitBooking(event)">
-      <input type="hidden" id="bk-offer"><input type="hidden" id="bk-amt">
-      <input type="hidden" id="bk-cur"><input type="hidden" id="bk-from">
-      <input type="hidden" id="bk-to"><input type="hidden" id="bk-date">
-
-      <p style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#0a1628;margin-bottom:12px;">Passenger Details</p>
-      <div class="row g-2">
-        <div class="col-6"><div class="nm-df"><label>First Name *</label><input type="text" id="bk-fn" placeholder="John" required></div></div>
-        <div class="col-6"><div class="nm-df"><label>Last Name *</label><input type="text" id="bk-ln" placeholder="Smith" required></div></div>
-      </div>
-      <div class="nm-df"><label>Email *</label><input type="email" id="bk-em" placeholder="john@example.com" required></div>
-      <div class="nm-df"><label>Phone</label><input type="tel" id="bk-ph" placeholder="+1 (555) 000-0000"></div>
-
-      <p style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#0a1628;margin:18px 0 12px;">Payment</p>
-      <div class="nm-df">
-        <label>Card Details *</label>
-        <div id="nm-card-el"></div>
-        <div id="nm-card-err"></div>
-      </div>
-
-      <div id="nm-book-msg"></div>
-      <button type="submit" class="nm-pay-btn" id="nm-pay-btn">
-        <i class="fas fa-lock me-2"></i> Pay &amp; Confirm Booking
-      </button>
-      <p style="text-align:center;font-size:11px;color:#bbb;margin-top:10px;">
-        <i class="fas fa-shield-alt"></i> Secured by Stripe · SSL Encrypted
-      </p>
-    </form>
-  </div>
-</div>
 
 {{-- Airport data removed — live Duffel Places API used instead --}}
 <script>
@@ -1462,6 +1594,16 @@ function nmSetupAC(inputId, codeId, dropId) {
 nmSetupAC('nm-from', 'nm-from-code', 'nm-from-drop');
 nmSetupAC('nm-to',   'nm-to-code',   'nm-to-drop');
 
+// Execute <script> tags injected via innerHTML (e.g. Stripe in prebook partial)
+function nmRunScripts(container) {
+    container.querySelectorAll('script').forEach(function(old) {
+        var s = document.createElement('script');
+        Array.from(old.attributes).forEach(function(a){ s.setAttribute(a.name, a.value); });
+        s.textContent = old.textContent;
+        old.parentNode.replaceChild(s, old);
+    });
+}
+
 // ── Results helpers ────────────────────────────────
 function nmShowResults(html, animate) {
     var outer = document.getElementById('nm-results');
@@ -1480,12 +1622,18 @@ function nmShowResults(html, animate) {
         });
     });
 }
-function nmLoading(msg) {
-    nmShowResults('<div class="nm-loading"><div class="nm-spinner"></div><p>'+(msg||'Searching...')+'</p></div>', false);
+function nmLoading(msg, from, to) {
+    var routeHtml = (from && to)
+      ? '<div class="nm-loading-route"><span>'+from+'</span> &nbsp;&#x2192;&nbsp; <span>'+to+'</span></div>'
+      : '';
+    nmShowResults('<div class="nm-loading">'
+      + '<i class="fas fa-plane nm-loading-plane"></i>'
+      + routeHtml
+      + '<div class="nm-loading-bar-wrap"><div class="nm-loading-bar"></div></div>'
+      + '<p>'+(msg||'Searching...')+'</p></div>', false);
     document.getElementById('nm-results').style.display = '';
-    // Immediate show without animation for loading state
-document.querySelector('.nm-results-inner').classList.add('nm-visible');
-
+    document.querySelector('.nm-results-inner').classList.add('nm-visible');
+}
 function nmError(msg) {
     nmShowResults('<div class="nm-alert nm-alert-err mt-2"><i class="fas fa-exclamation-circle me-2"></i>'+msg+'</div>');
 }
@@ -1500,9 +1648,18 @@ function nmSearchFlights(overrideDate) {
     // Show spinner on button immediately
     var searchBtn = document.getElementById('nm-search-btn');
     if (searchBtn && !overrideDate) {
-        searchBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Searching...';
+        // Ripple
+        var rip = document.createElement('span');
+        rip.className = 'nm-ripple';
+        rip.style.top = (searchBtn.offsetHeight/2)+'px';
+        rip.style.left = (searchBtn.offsetWidth/2)+'px';
+        searchBtn.appendChild(rip);
+        setTimeout(function(){ rip.remove(); }, 700);
+        // Loading state
+        searchBtn.innerHTML = '<i class="fas fa-plane fa-spin" style="font-size:13px;"></i>&nbsp; Searching...';
+        searchBtn.classList.add('nm-btn-loading');
         searchBtn.disabled = true;
-        setTimeout(function(){ searchBtn.innerHTML='<i class="fas fa-search"></i> Search'; searchBtn.disabled=false; }, 8000);
+        setTimeout(function(){ searchBtn.innerHTML='<i class="fas fa-search"></i> Search'; searchBtn.classList.remove('nm-btn-loading'); searchBtn.disabled=false; }, 12000);
     }
     // Re-extract IATA on every search (handles late datalist selection)
     var fromEl = document.getElementById('nm-from');
@@ -1544,7 +1701,7 @@ function nmSearchFlights(overrideDate) {
     }
 
     window._nmCtx = {from:from, to:to, depart:depart, adults:adults, cabin:cabin, trip:trip};
-    nmLoading('Searching all airlines: ' + from + ' &rarr; ' + to + ' &hellip;');
+    nmLoading('Searching all airlines&hellip;', from, to);
 
     var qs = 'slices[0][from]='+encodeURIComponent(from)
            + '&slices[0][to]='+encodeURIComponent(to)
@@ -1589,7 +1746,7 @@ function nmFmtDate(dateStr) {
 }
 
 // US airline priority — shown first before international carriers
-var NM_US_PRIORITY = {AA:1, F9:2, NK:3, B6:4, AS:5, UA:6, DL:7, WN:8, G4:9, SY:10};
+var NM_US_PRIORITY = {AA:1, F9:2, B6:4, AS:5, UA:6, DL:7, WN:8, G4:9, SY:10};
 
 function nmSortPriority(a, b) {
     var ia = (a.owner && a.owner.iata_code) ? a.owner.iata_code.toUpperCase() : '';
@@ -1638,10 +1795,26 @@ function nmRenderFlights(offers, from, to, depart) {
     html += nmBuildPriceCalendar(from, to, depart);
 
     html += '<div id="nm-fl-list">';
-    sorted.forEach(function(o){ html += nmFlightCard(o); });
+    sorted.forEach(function(o, i){
+        var delay = (i * 0.07).toFixed(2);
+        var priceDelay = (i * 0.07 + 0.4).toFixed(2);
+        var card = nmFlightCard(o)
+            .replace('class="nm-fc-price"', 'class="nm-fc-price" style="animation:nm-price-flash .8s '+priceDelay+'s ease both;"');
+        html += '<div style="animation:nm-card-luxury .65s '+delay+'s cubic-bezier(.16,1,.3,1) both;">' + card + '</div>';
+    });
     html += '</div>';
 
     nmShowResults(html);
+
+    // Remove shimmer from search button
+    var sb = document.getElementById('nm-search-btn');
+    if (sb) { sb.innerHTML='<i class="fas fa-search"></i> Search'; sb.classList.remove('nm-btn-loading'); sb.disabled=false; }
+
+    // Smooth scroll to results
+    setTimeout(function(){
+        var res = document.getElementById('nm-results');
+        if (res) res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 150);
 
     // Fetch nearby date prices after render
     setTimeout(function(){ nmFetchNearbyPrices(from, to, depart); }, 600);
@@ -1730,7 +1903,7 @@ function nmFetchNearbyPrices(from, to, depart) {
 }
 
 // Airlines that have real logos on Duffel CDN
-var NM_HAS_LOGO = {AA:1,AS:1,B6:1,DL:1,F9:1,G4:1,HA:1,MX:1,NK:1,SY:1,UA:1,WN:1,
+var NM_HAS_LOGO = {AA:1,AS:1,B6:1,DL:1,F9:1,G4:1,HA:1,MX:1,SY:1,UA:1,WN:1,
     BA:1,VS:1,LH:1,AF:1,KL:1,IB:1,AZ:1,TK:1,EK:1,QR:1,EY:1,SQ:1,CX:1,
     AC:1,WS:1,LX:1,OS:1,AY:1,SK:1,FI:1,EI:1,TP:1,LO:1,AT:1,MS:1,
     QF:1,NZ:1,LA:1,AM:1,CM:1,AV:1,AD:1,G3:1,JJ:1};
@@ -1819,55 +1992,264 @@ document.addEventListener('click', function(e) {
 // HOTELS
 // ════════════════════════════════════════════════════
 function nmSearchHotels() {
-    var dest = document.querySelectorAll(".nm-search-input")[2].value.trim();
-    var cin  = document.getElementById('nm-h-in').value;
-    var cout = document.getElementById('nm-h-out').value;
-    var adl  = document.getElementById('nm-h-adults').value;
-    var rm   = document.getElementById('nm-h-rooms').value;
+    // nm-h-dest may be replaced by nmSearch() autocomplete widget — look for visible input in panel
+    var panel = document.getElementById('panel-hotels');
+    var destEl = panel ? (panel.querySelector('.nm-search-input') || document.getElementById('nm-h-dest')) : document.getElementById('nm-h-dest');
+    var dest = destEl ? destEl.value.trim() : '';
+    var cin  = document.getElementById('nm-h-in') ? document.getElementById('nm-h-in').value : '';
+    var cout = document.getElementById('nm-h-out') ? document.getElementById('nm-h-out').value : '';
+    var adl  = document.getElementById('nm-h-adults') ? document.getElementById('nm-h-adults').value : '2';
+    var rm   = document.getElementById('nm-h-rooms') ? document.getElementById('nm-h-rooms').value : '1';
     if (!dest||!cin||!cout) { alert('Please fill in destination, check-in and check-out dates.'); return; }
+
+    // Button loading animation
+    var hBtn = document.getElementById('nm-h-search-btn');
+    if (hBtn) {
+        var rip = document.createElement('span');
+        rip.className = 'nm-ripple';
+        rip.style.top  = (hBtn.offsetHeight/2)+'px';
+        rip.style.left = (hBtn.offsetWidth/2)+'px';
+        hBtn.appendChild(rip);
+        setTimeout(function(){ rip.remove(); }, 700);
+        hBtn.innerHTML = '<i class="fas fa-hotel fa-spin" style="font-size:13px;"></i>&nbsp; Searching...';
+        hBtn.classList.add('nm-btn-loading');
+        hBtn.disabled = true;
+    }
+
     nmLoading('Searching hotels in '+dest+'&hellip;');
+
+    // Scroll to results immediately so user sees the loading state
+    var res = document.getElementById('nm-results');
+    if (res) setTimeout(function(){ res.scrollIntoView({behavior:'smooth', block:'start'}); }, 120);
+
     var qs = 'city='+encodeURIComponent(dest)+'&checkin='+encodeURIComponent(cin)+'&checkout='+encodeURIComponent(cout)+'&adults='+adl+'&rooms='+rm;
     fetch('/api/home/hotels?'+qs, {headers:{'X-Requested-With':'XMLHttpRequest'}})
     .then(function(r){return r.json();})
     .then(function(data){
+        if (hBtn) { hBtn.innerHTML='<i class="fas fa-search"></i> Search Hotels'; hBtn.classList.remove('nm-btn-loading'); hBtn.disabled=false; }
         if(data.error && !data.hotels) { nmError(data.error+' &nbsp;<a href="/hotels" style="color:#c9a84c;">Try our hotels page</a>'); return; }
-        nmRenderHotels(data.hotels||[], dest, cin, cout);
+        nmRenderHotels(data.hotels||[], dest, cin, cout, adl, rm);
     })
-    .catch(function(){ nmError('Hotel search failed. <a href="/hotels" style="color:#c9a84c;">Try our hotels page</a>.'); });
+    .catch(function(){
+        if (hBtn) { hBtn.innerHTML='<i class="fas fa-search"></i> Search Hotels'; hBtn.classList.remove('nm-btn-loading'); hBtn.disabled=false; }
+        nmError('Hotel search failed. <a href="/hotels" style="color:#c9a84c;">Try our hotels page</a>.');
+    });
 }
 
-function nmRenderHotels(hotels, dest, cin, cout) {
-    if (!hotels||hotels.length===0) {
-        nmNone('No hotels found in '+dest+'.<br><small style="color:#999">Try different dates or visit our <a href="/hotels" style="color:#c9a84c;">hotels page</a>.</small>');
-        return;
-    }
-    var html = '<div class="nm-results-hdr">'
-        +'<h4 class="nm-results-title"><i class="fas fa-hotel me-2" style="color:#c9a84c;"></i>'+dest+'</h4>'
-        +'<span style="font-size:13px;color:#888;">'+hotels.length+' hotels · '+cin+' – '+cout+'</span></div>'
-        +'<div class="nm-grid">';
-    hotels.slice(0,12).forEach(function(h){
+function nmBuildHotelCards(list) {
+    var html = '<div class="nm-grid" id="nm-h-grid">';
+    list.forEach(function(h, i){
         var name  = h.name||'Hotel';
         var stars = parseInt(h.categoryCode||h.stars||h.star_rating||0)||0;
         var starS = stars ? ('★').repeat(stars) : '';
         var rate  = h.minRate||h.total_amount||0;
-        var pStr  = rate ? '$'+parseFloat(rate).toFixed(0)+'/night' : 'Check price';
-        var imgs  = h.images||[];
-        var img   = imgs.length ? imgs[0].path||imgs[0].url||'' : '';
-        if(img && img.indexOf('http')===-1) img = 'https://photos.hotelbeds.com/giata/bigger/'+img;
+        var price = rate ? parseFloat(rate).toFixed(0) : null;
+        var img   = h.image || '';
+        if (!img) {
+            var imgs = h.images||[];
+            img = imgs.length ? (imgs[0].path||imgs[0].url||'') : '';
+            if (img && img.indexOf('http')===-1) img = 'https://photos.hotelbeds.com/giata/bigger/'+img;
+        }
         var addr  = (h.address&&h.address.content)||h.address||'';
-        html += '<div class="nm-hc">'
-            +(img?'<img src="'+img+'" class="nm-hc-img" alt="'+name+'" loading="lazy" onerror="this.outerHTML=\'<div class=nm-hc-ph>🏨</div>\'">'
-                 :'<div class="nm-hc-ph">🏨</div>')
+        var city  = h.city||'';
+        var hid   = h.hotelId||h.code||h.id||'';
+        var delay = (i * 0.065).toFixed(2);
+        var pDelay= (i * 0.065 + 0.35).toFixed(2);
+        html += '<div class="nm-hc" style="animation:nm-card-luxury .6s '+delay+'s cubic-bezier(.16,1,.3,1) both;">'
+            +(img ? '<div class="nm-hc-img-wrap"><img src="'+img+'" class="nm-hc-img" alt="'+name+'" loading="lazy" onerror="this.closest(\'.nm-hc-img-wrap\').innerHTML=\'<div class=nm-hc-ph>🏨</div>\'"></div>'
+                  : '<div class="nm-hc-ph">🏨</div>')
             +'<div class="nm-hc-body">'
             +'<div class="nm-hc-name">'+name+'</div>'
             +(starS?'<div class="nm-hc-stars">'+starS+'</div>':'')
-            +(addr?'<div class="nm-hc-meta"><i class="fas fa-map-marker-alt"></i> '+addr+'</div>':'')
-            +'<div class="nm-hc-price">'+pStr+'</div>'
-            +'<a href="{{ url("/hotels") }}" class="nm-hc-btn">View &amp; Book</a>'
+            +((addr||city)?'<div class="nm-hc-meta"><i class="fas fa-map-marker-alt"></i> '+(addr||city)+'</div>':'')
+            +(price ? '<div class="nm-hc-price" style="animation:nm-price-flash .9s '+pDelay+'s ease both;"><span style="font-size:11px;font-weight:500;color:#aaa;">FROM</span> $'+price+'<span style="font-size:12px;font-weight:500;color:#aaa;">/night</span></div>'
+                    : '<div class="nm-hc-price">Check price</div>')
+            +(hid ? '<button class="nm-hc-btn" onclick="nmHotelDetail(\''+hid+'\')">View Hotel &amp; Rooms &rarr;</button>'
+                  : '<a href="/hotels" class="nm-hc-btn">View Hotel &amp; Rooms &rarr;</a>')
             +'</div></div>';
     });
-    html += '</div>';
+    return html + '</div>';
+}
+
+// active sort + star filter state
+window._nmHSort  = 'price-asc';
+window._nmHStars = 0; // 0 = all
+
+function nmApplyHotelFilters() {
+    var hotels = window._nmLastHotels || [];
+    var by     = window._nmHSort;
+    var star   = window._nmHStars;
+
+    // Filter by star rating (0 = show all)
+    var filtered = star ? hotels.filter(function(h){ return parseInt(h.categoryCode||0) === star; }) : hotels;
+
+    // Sort
+    var s = filtered.slice();
+    if (by === 'price-asc')  s.sort(function(a,b){ return (a.minRate||0)-(b.minRate||0); });
+    if (by === 'price-desc') s.sort(function(a,b){ return (b.minRate||0)-(a.minRate||0); });
+
+    // Re-render grid
+    var grid = document.getElementById('nm-h-grid');
+    if (grid) {
+        var next = document.createElement('div');
+        next.innerHTML = nmBuildHotelCards(s.slice(0,12));
+        grid.parentNode.replaceChild(next.firstChild, grid);
+    }
+
+    // Update count in header
+    var countEl = document.getElementById('nm-h-count');
+    if (countEl) countEl.textContent = s.length + ' propert' + (s.length===1?'y':'ies');
+
+    // Sync sort button states
+    document.querySelectorAll('.nm-hsort-btn').forEach(function(btn){
+        btn.classList.toggle('active', btn.dataset.sort === by);
+    });
+    // Sync star button states
+    document.querySelectorAll('.nm-hstar-btn').forEach(function(btn){
+        btn.classList.toggle('active', parseInt(btn.dataset.star) === star);
+    });
+}
+
+function nmSetHSort(by) {
+    window._nmHSort = by;
+    nmApplyHotelFilters();
+}
+
+function nmToggleHStar(n) {
+    window._nmHStars = (window._nmHStars === n) ? 0 : n; // toggle off if same
+    nmApplyHotelFilters();
+}
+
+function nmRenderHotels(hotels, dest, cin, cout, adl, rm) {
+    if (!hotels||hotels.length===0) {
+        nmNone('No hotels found in '+dest+'.<br><small style="color:#999">Try different dates or visit our <a href="/hotels" style="color:#c9a84c;">hotels page</a>.</small>');
+        return;
+    }
+    window._nmLastHotels  = hotels;
+    window._nmHotelSearch = {dest:dest, cin:cin, cout:cout, adl:adl||2, rm:rm||1};
+    window._nmHSort  = 'price-asc';
+    window._nmHStars = 0;
+
+    function fmtDate(d){ try{ var p=d.split('-'); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+p[1]-1]+' '+p[2]; }catch(e){return d;} }
+    var nights = 0;
+    try{ nights = Math.round((new Date(cout)-new Date(cin))/(86400000)); }catch(e){}
+    var nightStr = nights>0 ? nights+' night'+(nights>1?'s':'') : '';
+
+    // Sort by cheapest first on initial render
+    var sorted = hotels.slice().sort(function(a,b){ return (a.minRate||0)-(b.minRate||0); });
+
+    var html = ''
+        +'<div style="animation:nm-hdr-drop .5s cubic-bezier(.16,1,.3,1) both;">'
+        // ── Title row
+        +'<div class="nm-results-hdr" style="margin-bottom:12px;">'
+        +'<div>'
+        +'<h4 class="nm-results-title"><i class="fas fa-hotel me-2" style="color:#c9a84c;"></i>'+dest+'</h4>'
+        +'<div style="font-size:13px;color:#aaa;margin-top:2px;">'
+        +'<span id="nm-h-count">'+hotels.length+' properties</span>'
+        +(nightStr?' &nbsp;·&nbsp; '+nightStr:'')
+        +' &nbsp;·&nbsp; '+fmtDate(cin)+' – '+fmtDate(cout)
+        +(adl>1?' &nbsp;·&nbsp; '+adl+' guests':'')
+        +'</div>'
+        +'</div>'
+        +'</div>'
+        // ── Filter bar — single scrollable row, no wrapping
+        +'<div style="display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;align-items:center;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #edf0f7;scrollbar-width:none;-webkit-overflow-scrolling:touch;">'
+        +'<button class="nm-sort-btn nm-hsort-btn active" data-sort="price-asc" onclick="nmSetHSort(\'price-asc\')" style="flex-shrink:0;font-size:11px;padding:5px 10px;"><i class="fas fa-arrow-up" style="font-size:8px;"></i> Cheapest</button>'
+        +'<button class="nm-sort-btn nm-hsort-btn" data-sort="price-desc" onclick="nmSetHSort(\'price-desc\')" style="flex-shrink:0;font-size:11px;padding:5px 10px;"><i class="fas fa-arrow-down" style="font-size:8px;"></i> Highest</button>'
+        +'<div style="width:1px;height:16px;background:#dde2ec;flex-shrink:0;margin:0 2px;"></div>'
+        +'<button class="nm-sort-btn nm-hstar-btn" data-star="5" onclick="nmToggleHStar(5)" style="flex-shrink:0;font-size:11px;padding:5px 10px;">5★</button>'
+        +'<button class="nm-sort-btn nm-hstar-btn" data-star="4" onclick="nmToggleHStar(4)" style="flex-shrink:0;font-size:11px;padding:5px 10px;">4★</button>'
+        +'<button class="nm-sort-btn nm-hstar-btn" data-star="3" onclick="nmToggleHStar(3)" style="flex-shrink:0;font-size:11px;padding:5px 10px;">3★</button>'
+        +'<button class="nm-sort-btn nm-hstar-btn" data-star="2" onclick="nmToggleHStar(2)" style="flex-shrink:0;font-size:11px;padding:5px 10px;">2★</button>'
+        +'<button class="nm-sort-btn nm-hstar-btn" data-star="1" onclick="nmToggleHStar(1)" style="flex-shrink:0;font-size:11px;padding:5px 10px;">1★</button>'
+        +'</div>'
+        // ── Cards
+        + nmBuildHotelCards(sorted.slice(0,12))
+        +'</div>';
+
     nmShowResults(html);
+}
+
+function nmHotelDetail(hotelId) {
+    var s = window._nmHotelSearch || {};
+    var hotels = window._nmLastHotels || [];
+    var h = hotels.find(function(x){ return (x.hotelId||x.code||x.id) === hotelId; }) || {};
+
+    // Set up back navigation immediately
+    window._nmHotelBack = function(){
+        nmRenderHotels(window._nmLastHotels||[], s.dest||'', s.cin||'', s.cout||'', s.adl||2, s.rm||1);
+    };
+
+    // Show instant preview from card data — no loading screen
+    var img   = h.image || '';
+    var name  = h.name || '';
+    var rate  = h.minRate || h.total_amount || 0;
+    var pStr  = rate ? '$'+parseFloat(rate).toFixed(0)+'/night' : '';
+    var addr  = (h.address&&h.address.content)||h.address||'';
+    var stars = parseInt(h.categoryCode||h.stars||0)||0;
+    var starS = stars ? ('★').repeat(stars) : '';
+    var inner = document.getElementById('nm-results-html') || document.querySelector('.nm-results-inner');
+    var res   = document.getElementById('nm-results');
+    if (inner) {
+        inner.innerHTML = '<div style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.10);">'
+            +(img?'<img src="'+img+'" style="width:100%;height:280px;object-fit:cover;display:block;" loading="eager">':'<div style="height:200px;background:linear-gradient(135deg,#08101e,#0f1e35);"></div>')
+            +'<div style="padding:24px 24px 20px;">'
+            +(name?'<h2 style="font-family:Cormorant Garamond,Georgia,serif;font-size:1.6rem;font-weight:600;color:#070D1A;margin:0 0 4px;line-height:1.2;">'+name+'</h2>':'')
+            +(starS?'<div style="color:#C9A84C;font-size:13px;margin-bottom:6px;">'+starS+'</div>':'')
+            +(addr?'<div style="font-size:13px;color:#888;margin-bottom:14px;"><i class="fas fa-map-marker-alt" style="color:#C9A84C;margin-right:5px;"></i>'+addr+'</div>':'')
+            +(pStr?'<div style="font-size:1.5rem;font-weight:900;color:#C9A84C;margin-bottom:18px;">'+pStr+'</div>':'')
+            +'<div style="text-align:center;padding:20px 0 8px;"><i class="fas fa-circle-notch fa-spin" style="color:#C9A84C;font-size:22px;display:block;margin-bottom:10px;"></i><span style="font-size:13px;color:#aaa;letter-spacing:1px;text-transform:uppercase;">Loading rooms &amp; availability…</span></div>'
+            +'</div></div>';
+        if (res) { res.style.display=''; res.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+
+    var qs = 'check_in='+encodeURIComponent(s.cin||'')+'&check_out='+encodeURIComponent(s.cout||'')+'&adults='+encodeURIComponent(s.adl||2);
+    fetch('/api/home/hotels/detail/'+hotelId+'?'+qs, {headers:{'X-Requested-With':'XMLHttpRequest'}})
+    .then(function(r){ return r.text(); })
+    .then(function(html){
+        if (!inner) return;
+        inner.style.opacity = '1';
+        inner.style.transition = 'opacity .25s ease';
+        inner.style.opacity = '0';
+        setTimeout(function(){
+            inner.innerHTML = html;
+            nmRunScripts(inner); // run lightbox + gallery JS
+            inner.style.opacity = '1';
+            if (res) res.scrollIntoView({behavior:'smooth', block:'start'});
+        }, 220);
+    })
+    .catch(function(){ nmError('Could not load hotel details. Please try again.'); });
+}
+
+function nmPrebook(offerId) {
+    var inner = document.getElementById('nm-results-html') || document.querySelector('.nm-results-inner');
+    var res   = document.getElementById('nm-results');
+    // Show inline mini-loading without wiping the detail page
+    if (inner) {
+        inner.style.transition = 'opacity .2s';
+        inner.style.opacity = '0';
+    }
+    var csrf = document.querySelector('meta[name="csrf-token"]');
+    var headers = {'X-Requested-With':'XMLHttpRequest','Content-Type':'application/json'};
+    if (csrf) headers['X-CSRF-TOKEN'] = csrf.getAttribute('content');
+    fetch('/api/home/hotels/prebook', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({offer_id: offerId})
+    })
+    .then(function(r){ return r.text(); })
+    .then(function(html){
+        if (inner) {
+            inner.innerHTML = html;
+            inner.style.opacity = '1';
+            nmRunScripts(inner); // execute Stripe + any other scripts
+        }
+        if (res) res.scrollIntoView({behavior:'smooth', block:'start'});
+    })
+    .catch(function(){
+        if (inner) inner.style.opacity = '1';
+        nmError('Could not prepare booking. Please try again.');
+    });
 }
 
 // ════════════════════════════════════════════════════
@@ -2019,18 +2401,20 @@ function nmCloseDrawer() {
 function nmSubmitBooking(e) {
     e.preventDefault();
     var btn  = document.getElementById('nm-pay-btn');
-    var fn   = document.getElementById('bk-fn').value.trim();
-    var ln   = document.getElementById('bk-ln').value.trim();
-    var em   = document.getElementById('bk-em').value.trim();
-    var ph   = document.getElementById('bk-ph').value.trim();
-    var oid  = document.getElementById('bk-offer').value;
-    var amt  = parseFloat(document.getElementById('bk-amt').value);
-    var cur  = document.getElementById('bk-cur').value;
-    var from = document.getElementById('bk-from').value;
-    var to   = document.getElementById('bk-to').value;
-    var dt   = document.getElementById('bk-date').value;
+    var fn     = document.getElementById('bk-fn').value.trim();
+    var ln     = document.getElementById('bk-ln').value.trim();
+    var em     = document.getElementById('bk-em').value.trim();
+    var ph     = document.getElementById('bk-ph').value.trim();
+    var dob    = document.getElementById('bk-dob').value;
+    var gender = document.getElementById('bk-gender').value;
+    var oid    = document.getElementById('bk-offer').value;
+    var amt    = parseFloat(document.getElementById('bk-amt').value);
+    var cur    = document.getElementById('bk-cur').value;
+    var from   = document.getElementById('bk-from').value;
+    var to     = document.getElementById('bk-to').value;
+    var dt     = document.getElementById('bk-date').value;
 
-    if(!fn||!ln||!em){ document.getElementById('nm-book-msg').innerHTML='<div class="nm-alert nm-alert-err mb-2">Please fill in all required fields.</div>'; return; }
+    if(!fn||!ln||!em||!dob||!gender||!ph){ document.getElementById('nm-book-msg').innerHTML='<div class="nm-alert nm-alert-err mb-2">Please fill in all required fields.</div>'; return; }
 
     btn.disabled=true;
     btn.innerHTML='<i class="fas fa-spinner fa-spin me-2"></i>Processing…';
@@ -2068,6 +2452,7 @@ function nmSubmitBooking(e) {
             headers:{'Content-Type':'application/json','X-CSRF-TOKEN':csrf,'X-Requested-With':'XMLHttpRequest'},
             body:JSON.stringify({offer_id:oid, payment_intent_id:res.paymentIntent.id,
                 first_name:fn, last_name:ln, email:em, phone:ph,
+                date_of_birth:dob, gender:gender,
                 from:from, to:to, depart_date:dt, price:amt, currency:cur,
                 adults: document.getElementById('nm-adults').value||1})
         });
@@ -2094,6 +2479,40 @@ function nmSubmitBooking(e) {
         btn.disabled=false; btn.innerHTML='<i class="fas fa-lock me-2"></i>Retry Payment';
     });
 }
+
+// ── Typewriter effect ───────────────────────────────
+(function() {
+  var el = document.getElementById('nm-type-word');
+  if (!el) return;
+  var words = ['Your Journey.', 'Your Trip.', 'Your Stay.', 'Your Music.', 'Your Sports.'];
+  var cur = document.createElement('span');
+  cur.id = 'nm-cursor'; cur.textContent = '|';
+  el.insertAdjacentElement('afterend', cur);
+  var idx = 0, pos = 0, deleting = false;
+  var word = words[0];
+  el.textContent = '';
+  function tick() {
+    if (!deleting) {
+      pos++;
+      el.textContent = word.slice(0, pos);
+      if (pos === word.length) { deleting = true; setTimeout(tick, 1600); return; }
+      setTimeout(tick, 85);
+    } else {
+      pos--;
+      el.textContent = word.slice(0, pos);
+      if (pos === 0) {
+        deleting = false;
+        idx = (idx + 1) % words.length;
+        word = words[idx];
+        setTimeout(tick, 350);
+        return;
+      }
+      setTimeout(tick, 45);
+    }
+  }
+  setTimeout(tick, 600);
+})();
+
 </script>
 @endpush
 </x-app-layout>

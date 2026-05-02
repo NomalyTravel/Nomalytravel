@@ -15,6 +15,17 @@
         <meta name="description" content="{{@$seo['meta_description']}}">
         <meta name="keywords" content="{{@$seo['meta_keywords']}}">
 
+        <!-- OpenGraph -->
+        <meta property="og:type"        content="website">
+        <meta property="og:site_name"   content="Nomaly Travel">
+        <meta property="og:title"       content="Nomaly Travel">
+        <meta property="og:description" content="{{@$seo['meta_description']}}">
+        <meta property="og:image"       content="{{ asset('images/nomalyopengraph.png') }}">
+        <meta property="og:url"         content="{{ url()->current() }}">
+        <meta name="twitter:card"       content="summary_large_image">
+        <meta name="twitter:title"      content="Nomaly Travel">
+        <meta name="twitter:image"      content="{{ asset('images/nomalyopengraph.png') }}">
+
         <!-- Fav Icon -->
 
     <link rel="shortcut icon" href="{{asset('favicon.ico') }}">
