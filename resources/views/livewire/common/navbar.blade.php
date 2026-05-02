@@ -105,7 +105,24 @@
 /* Remove the extra top margin pushing nav down */
 .header-wrap .navbar { margin-top: 0 !important; width: 100%; }
 .header-wrap .col-lg-10 { display: flex; align-items: center; }
-.header-wrap .navbar-collapse { justify-content: flex-end; }
+/* nm-nav-panel: desktop flex (replaces Bootstrap navbar-collapse) */
+@media (min-width: 992px) {
+  .nm-nav-panel {
+    display: flex !important;
+    flex-basis: auto;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: flex-end;
+    background: transparent !important;
+    position: static !important;
+    transform: none !important;
+    box-shadow: none !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+}
 #navbarSupportedContent { z-index: 1049; background: #fff; }
 </style>
 <div class="header-wrap">
@@ -137,9 +154,9 @@
                   Travel <i class="fas fa-chevron-down nm-caret"></i>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="nmTravelDd">
-                  <li><a class="dropdown-item" href="{{ url('/flights') }}"><i class="fas fa-plane"></i> Flights</a></li>
-                  <li><a class="dropdown-item" href="{{ url('/hotels') }}"><i class="fas fa-hotel"></i> Hotels</a></li>
-                  <li><a class="dropdown-item" href="{{ url('/tours') }}"><i class="fas fa-map-marked-alt"></i> Tours</a></li>
+                  <li><a class="dropdown-item" href="{{ url('/') }}#flights"><i class="fas fa-plane"></i> Flights</a></li>
+                  <li><a class="dropdown-item" href="{{ url('/') }}#hotels"><i class="fas fa-hotel"></i> Hotels</a></li>
+                  {{-- <li><a class="dropdown-item" href="{{ url('/tours') }}"><i class="fas fa-map-marked-alt"></i> Tours</a></li> --}}
                 </ul>
               </li>
 
@@ -149,8 +166,8 @@
                   Entertainment <i class="fas fa-chevron-down nm-caret"></i>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="nmEntDd">
-                  <li><a class="dropdown-item" href="{{ url('/sports') }}"><i class="fas fa-football-ball"></i> Sports</a></li>
-                  <li><a class="dropdown-item" href="{{ url('/concerts') }}"><i class="fas fa-music"></i> Concerts</a></li>
+                  <li><a class="dropdown-item" href="{{ url('/') }}#sports"><i class="fas fa-football-ball"></i> Sports</a></li>
+                  <li><a class="dropdown-item" href="{{ url('/') }}#concerts"><i class="fas fa-music"></i> Concerts</a></li>
                 </ul>
               </li>
 
@@ -247,6 +264,13 @@
     var navPanel = document.getElementById('navbarSupportedContent');
     if (navPanel) {
       navPanel.addEventListener('click', function(e){ e.stopPropagation(); });
+
+      // Close mobile nav when any real link (not a dropdown toggle) is clicked
+      navPanel.querySelectorAll('a:not([data-nm-dd])').forEach(function(link) {
+        link.addEventListener('click', function() {
+          navPanel.classList.remove('show');
+        });
+      });
     }
   }
 

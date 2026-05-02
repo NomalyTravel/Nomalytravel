@@ -332,7 +332,7 @@ body { animation: nm-page-in .5s ease both; }
   border: none;
   outline: none;
   font-family: 'DM Sans', sans-serif;
-  font-size: 15px;
+  font-size: 16px; /* 16px min prevents iOS Safari auto-zoom on focus */
   font-weight: 600;
   color: var(--navy);
   background: transparent;
@@ -1044,7 +1044,7 @@ body { animation: nm-page-in .5s ease both; }
 {{-- ═══════════════════════════════════════════════════
      OUR AIRLINE PARTNERS SECTION
 ═══════════════════════════════════════════════════ --}}
-<section class="nm-ap-section">
+<section class="nm-ap-section" id="nm-ap-section">
   <div class="container">
     <div class="nm-ap-eyebrow">
       <span class="nm-ap-line"></span>
@@ -1396,6 +1396,9 @@ function nmTab(t) {
     document.querySelector('[data-tab="'+t+'"]').classList.add('active');
     document.getElementById('panel-'+t).classList.remove('d-none');
     document.getElementById('nm-results').style.display = 'none';
+    // Always restore airline partners when switching tabs
+    var ap = document.getElementById('nm-ap-section');
+    if (ap) ap.style.display = '';
 }
 
 // ── Trip type ──────────────────────────────────────
@@ -1992,6 +1995,7 @@ document.addEventListener('click', function(e) {
 // HOTELS
 // ════════════════════════════════════════════════════
 function nmSearchHotels() {
+    var ap = document.getElementById('nm-ap-section'); if (ap) ap.style.display = 'none';
     // nm-h-dest may be replaced by nmSearch() autocomplete widget — look for visible input in panel
     var panel = document.getElementById('panel-hotels');
     var destEl = panel ? (panel.querySelector('.nm-search-input') || document.getElementById('nm-h-dest')) : document.getElementById('nm-h-dest');
@@ -2256,6 +2260,7 @@ function nmPrebook(offerId) {
 // SPORTS
 // ════════════════════════════════════════════════════
 function nmSearchSports() {
+    var ap = document.getElementById('nm-ap-section'); if (ap) ap.style.display = 'none';
     var city = document.getElementById('nm-sp-city').value.trim();
     var kw   = document.getElementById('nm-sp-kw').value;
     var dt   = document.getElementById('nm-sp-date').value;
@@ -2274,6 +2279,7 @@ function nmSearchSports() {
 // CONCERTS
 // ════════════════════════════════════════════════════
 function nmSearchConcerts() {
+    var ap = document.getElementById('nm-ap-section'); if (ap) ap.style.display = 'none';
     var city = document.getElementById('nm-co-city').value.trim();
     var kw   = document.getElementById('nm-co-kw').value.trim();
     var dt   = document.getElementById('nm-co-date').value;
@@ -2511,6 +2517,36 @@ function nmSubmitBooking(e) {
     }
   }
   setTimeout(tick, 600);
+})();
+
+// ── Hash-based tab activation (nav/footer links like /#hotels) ──
+(function() {
+  var tabMap = { '#flights':'flights', '#hotels':'hotels', '#sports':'sports', '#concerts':'concerts', '#tours':'flights' };
+
+  function activateHashTab() {
+    var hash = window.location.hash;
+    var tab = tabMap[hash];
+    if (!tab) return;
+    // Activate the tab
+    if (typeof nmTab === 'function') nmTab(tab);
+    // Scroll to search box with offset for fixed header
+    setTimeout(function() {
+      var el = document.querySelector('.nm-search-wrap');
+      if (!el) return;
+      var top = el.getBoundingClientRect().top + window.pageYOffset - 80;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    }, 80);
+  }
+
+  // On page load with hash
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', activateHashTab);
+  } else {
+    activateHashTab();
+  }
+
+  // When already on homepage and hash changes (clicking nav links)
+  window.addEventListener('hashchange', activateHashTab);
 })();
 
 </script>
