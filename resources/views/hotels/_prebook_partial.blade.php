@@ -1,5 +1,4 @@
-<x-app-layout>
-@push('css')
+
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root { --navy:#070D1A; --gold:#C9A84C; --gold-lt:#e8c96a; }
@@ -49,7 +48,6 @@
 .htb-confirm p { font-size:14px; color:#666; }
 .htb-ref { display:inline-block; background:#f0f4ff; color:var(--navy); font-size:15px; font-weight:800; padding:10px 24px; border-radius:10px; margin:12px 0; border:2px solid #d0dbf5; letter-spacing:1px; }
 </style>
-@endpush
 
 @php
     $hotel    = $prebook['hotel'] ?? [];
@@ -68,7 +66,7 @@
 <div class="htb-header">
     <div class="container d-flex justify-content:space-between align-items-center">
         <h2><i class="fas fa-clipboard-check me-2"></i>Complete Your Booking</h2>
-        <a href="javascript:history.back()" class="htb-back ms-auto"><i class="fas fa-arrow-left me-1"></i> Back</a>
+        <button type="button" onclick="window._nmHotelBack&&window._nmHotelBack()" class="htb-back ms-auto" style="background:none;border:none;padding:0;cursor:pointer;"><i class="fas fa-arrow-left me-1"></i> Back</button>
     </div>
 </div>
 
@@ -79,7 +77,7 @@
                 <i class="fas fa-exclamation-circle fa-3x text-warning mb-3 d-block"></i>
                 <h5>Rate expired or unavailable</h5>
                 <p class="text-muted">Room rates expire quickly. Please search again and select a room.</p>
-                <a href="{{ route('hotels.index') }}" class="btn btn-outline-secondary mt-2">Search Again</a>
+                <button type="button" onclick="window._nmHotelBack&&window._nmHotelBack()" class="btn btn-outline-secondary mt-2">Search Again</button>
             </div>
         @else
         <div class="row g-4 justify-content-center">
@@ -140,9 +138,8 @@
                         <p>Your room has been booked. A confirmation has been sent to your email.</p>
                         <div class="htb-ref" id="htb-booking-ref"></div>
                         <p style="font-size:13px;color:#999;" id="htb-booking-hotel"></p>
-                        <a href="{{ route('hotels.index') }}" class="htb-pay-btn mt-3" style="text-decoration:none;display:inline-block;width:auto;padding:12px 30px;">
-                            <i class="fas fa-search me-2"></i>Search More Hotels
-                        </a>
+                        <button type="button" onclick="window._nmHotelBack&&window._nmHotelBack()" class="htb-pay-btn mt-3" style="display:inline-block;width:auto;padding:12px 30px;background:linear-gradient(135deg,#C9A84C,#e8c96a);color:#070D1A;border:none;border-radius:11px;cursor:pointer;font-weight:800;font-size:15px;">
+                            <i class="fas fa-search me-2"></i>Search More Hotels</button>
                     </div>
                 </div>
             </div>
@@ -186,7 +183,7 @@
     </div>
 </div>
 
-@push('scripts')
+
 <script>
 var _htbStripe = null, _htbCard = null;
 var _prebookId = '{{ $prebookId ?? '' }}';
@@ -281,6 +278,5 @@ async function htbSubmit() {
     }
 }
 </script>
-@endpush
 
-</x-app-layout>
+

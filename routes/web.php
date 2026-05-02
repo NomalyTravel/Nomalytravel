@@ -774,6 +774,17 @@ Route::post('/email/resend', [App\Http\Controllers\Auth\VerificationController::
 Route::get('/sports', [App\Http\Controllers\TicketsController::class, 'sports'])->name('tickets.sports');
 Route::get('/concerts', [App\Http\Controllers\TicketsController::class, 'concerts'])->name('tickets.concerts');
 
+// Hotels (must be before wildcard slug/module routes)
+Route::get("/hotels", [App\Http\Controllers\HotelController::class, "index"])->name("hotels.index");
+Route::post("/hotels/search", [App\Http\Controllers\HotelController::class, "search"])->name("hotels.search");
+Route::get("/hotels/detail/{hotelId}", [App\Http\Controllers\HotelController::class, "detail"])->name("hotels.detail");
+Route::post("/hotels/prebook", [App\Http\Controllers\HotelController::class, "prebook"])->name("hotels.prebook");
+Route::post("/hotels/book", [App\Http\Controllers\HotelController::class, "book"])->name("hotels.book");
+Route::post("/hotels/payment-intent", [App\Http\Controllers\HotelController::class, "paymentIntent"])->name("hotels.payment.intent");
+Route::post('/api/home/hotels', [App\Http\Controllers\HotelController::class, 'searchJson'])->name('hotels.home.search');
+Route::get('/api/home/hotels/detail/{hotelId}', [App\Http\Controllers\HotelController::class, 'homeDetail'])->name('hotels.home.detail');
+Route::post('/api/home/hotels/prebook', [App\Http\Controllers\HotelController::class, 'homePrebook'])->name('hotels.home.prebook');
+
 Route::get('/{slug}',[CmsController::class, 'index'])->name('cms.page');
 
 Route::get('/{module}/delete/{id}', [ModulesDataController::class,'destroy'])->name('modules.data.delete');
@@ -1071,4 +1082,7 @@ Route::get('/api/seat-map/{offer_id}', function($offer_id) {
 
 Route::get("/hotels", [App\Http\Controllers\HotelController::class, "index"])->name("hotels.index");
 Route::post("/hotels/search", [App\Http\Controllers\HotelController::class, "search"])->name("hotels.search");
+Route::get("/hotels/detail/{hotelId}", [App\Http\Controllers\HotelController::class, "detail"])->name("hotels.detail");
 Route::post("/hotels/prebook", [App\Http\Controllers\HotelController::class, "prebook"])->name("hotels.prebook");
+Route::post("/hotels/book", [App\Http\Controllers\HotelController::class, "book"])->name("hotels.book");
+Route::post("/hotels/payment-intent", [App\Http\Controllers\HotelController::class, "paymentIntent"])->name("hotels.payment.intent");

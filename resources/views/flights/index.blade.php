@@ -80,7 +80,6 @@
               <small style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.5px;">We Fly With:</small>
               <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/AA.svg" alt="American Airlines" title="American Airlines">
               <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/F9.svg" alt="Frontier" title="Frontier">
-              <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/NK.svg" alt="Spirit" title="Spirit">
               <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/B6.svg" alt="JetBlue" title="JetBlue">
               <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/AS.svg" alt="Alaska" title="Alaska Airlines">
               <img src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/UA.svg" alt="United" title="United Airlines" style="opacity:.4;filter:grayscale(1)">
@@ -491,8 +490,8 @@ function flParseDur(iso){ if(!iso) return 0; var m=iso.match(/PT(?:(\d+)H)?(?:(\
 function flFmtTime(iso){ if(!iso) return ''; try{return new Date(iso).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});}catch(e){return '';} }
 function flFmtDate(s){ try{var d=new Date(s+'T12:00:00');return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});}catch(e){return s;} }
 
-var FL_US_PRIORITY={AA:1,F9:2,NK:3,B6:4,AS:5,UA:6,DL:7,WN:8,G4:9,SY:10};
-var FL_HAS_LOGO={AA:1,AS:1,B6:1,DL:1,F9:1,G4:1,HA:1,NK:1,SY:1,UA:1,WN:1,BA:1,LH:1,AF:1,KL:1,IB:1,EK:1,QR:1,SQ:1,AC:1,QF:1,LA:1,AM:1};
+var FL_US_PRIORITY={AA:1,F9:2,B6:4,AS:5,UA:6,DL:7,WN:8,G4:9,SY:10};
+var FL_HAS_LOGO={AA:1,AS:1,B6:1,DL:1,F9:1,G4:1,HA:1,SY:1,UA:1,WN:1,BA:1,LH:1,AF:1,KL:1,IB:1,EK:1,QR:1,SQ:1,AC:1,QF:1,LA:1,AM:1};
 
 function flSortPriority(a,b){
     var ia=(a.owner&&a.owner.iata_code)?a.owner.iata_code.toUpperCase():'';
@@ -636,7 +635,7 @@ function flFlightCard(offer){
             const oc=seg.operating_carrier||{};
             const owner=offer.owner||{};
             const iata=((oc.iata_code||owner.iata_code||'')).toUpperCase();
-            const airlineNames={'F9':'Frontier','NK':'Spirit','AA':'American','UA':'United','DL':'Delta','WN':'Southwest','B6':'JetBlue','AS':'Alaska','G4':'Allegiant','SY':'Sun Country','HA':'Hawaiian','MX':'Breeze','VX':'Virgin America'};
+            const airlineNames={'F9':'Frontier','AA':'American','UA':'United','DL':'Delta','WN':'Southwest','B6':'JetBlue','AS':'Alaska','G4':'Allegiant','SY':'Sun Country','HA':'Hawaiian','MX':'Breeze','VX':'Virgin America'};
             const ownerIata=(offer.owner&&offer.owner.iata_code)||'';
             const ownerName=(offer.owner&&offer.owner.name)||airlineNames[ownerIata]||ownerIata||'';
             const airlineName=oc.name||ownerName||airlineNames[iata]||iata||'Unknown';
